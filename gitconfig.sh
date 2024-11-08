@@ -1,7 +1,7 @@
 #!/bin/sh
 git rev-parse --is-inside-work-tree > /dev/null 2>&1
 if [ $? -ne 0 ]; then
-    echo "ERROR: Run this command inside a Git repository."
+    echo "ERROR: This command must be run inside a Git repository."
     exit 1
 fi
 
