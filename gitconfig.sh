@@ -1,24 +1,41 @@
 #!/bin/sh
 git rev-parse --is-inside-work-tree > /dev/null 2>&1
 if [ $? -ne 0 ]; then
-    echo "ERROR: This command must be run inside a Git repository."
+    printf "ERROR: This command must be run inside a Git repository.\n"
     exit 1
+
 fi
 
+git config commit.gpgsign false
 git config init.defaultBranch main
-git config user.email "182621594+1BH23CS024@users.noreply.github.com"
 git config user.name "Gaurav Chauhan"
-echo -e "\nLocal .gitconfig Profile: github.com/1BH23CS024"
+git config --unset gpg.format
 
-echo -e -n "\nConfigure GPG signing? (y/N): "
-read response
-response=$(echo "$response" | xargs | tr '[:upper:]' '[:lower:]')
+printf "Select Local .gitconfig (bti/GLOBAL): "
+read config
+config=$(printf "%s" "$config" | xargs | tr '[:upper:]' '[:lower:]')
 
-if [ "$response" != "y" ]; then
-    echo "GPG Signing: OFF"
-else
-    git config --unset gpg.format
-    git config user.signingkey "EA67D78E92DD0C37"
+if [ "$config" != "bti" ]; then
+    git config user.email "107812523+grvchnx@users.noreply.github.com"
+    git config user.signingkey "BDDB9E8DBF0BEF3E"
     git config commit.gpgsign true
-    echo "GPG Signing: ON"
+    printf "SUCCESS: Global .gitconfig selected\n"
+
+else
+    git config user.email "182621594+1BH23CS024@users.noreply.github.com"
+    printf "SUCCESS: Local github.com/1BH23CS024 config selected\n"
+
+    printf "\nConfigure GPG signing? (y/N): "
+    read gpg
+    gpg=$(printf "%s" "$gpg" | xargs | tr '[:upper:]' '[:lower:]')
+
+    if [ "$gpg" != "y" ]; then
+        printf "GPG Signing: OFF\n"
+
+    else
+        git config user.signingkey "EA67D78E92DD0C37"
+        git config commit.gpgsign true
+        printf "GPG Signing: ON\n"
+
+    fi
 fi
